@@ -1,6 +1,6 @@
 # Script Runner (srunner)
 
-*Break down large scripts into manageable steps
+*Break down large scripts into manageable steps*
 
 # example
 
