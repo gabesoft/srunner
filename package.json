@@ -1,0 +1,19 @@
+{
+    "name"         : "srunner"
+  , "version"      : "0.0.1"
+  , "description"  : "A node script runner to allow easy management of large scripts"
+  , "main"         : "index.js"
+  , "dependencies" : {
+        "colors" : "*"
+      , "async"  : "*"
+    }
+  , "repository" : {
+        "type" : "git"
+      , "url"  : ""
+    }
+  , "author" : {
+        "name"  : "Gabriel Adomnicai"
+      , "email" : "gabesoft@gmail.com"
+    }
+  , "license" : "MIT"
+}
