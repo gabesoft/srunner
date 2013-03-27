@@ -73,9 +73,15 @@ runner.js
 the sub-scripts (steps) are expected to provide a single export method with
 the following signatures (any of these is allowed)
 
-module.exports = (state, options, cb)
-module.exports = (options, cb)
-module.exports = (cb)
+``` js
+module.exports = function (state, options, cb) {
+```
+``` js
+ module.exports = function (options, cb) {
+```
+``` js
+ module.exports = function (cb) {
+```
 
 where
 - state:    Is an object that is local to the main script runner and it's passed to every step
