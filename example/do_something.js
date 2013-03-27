@@ -1,5 +1,5 @@
-module.exports = function (state, options, cb) {
-    console.log('Doing something...');
+module.exports = function (options, cb) {
+    console.log('Doing something...', options);
     cb();
 };
 

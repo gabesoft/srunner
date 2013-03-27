@@ -66,14 +66,27 @@ module.exports.init = function (options) {
 
         module.exports[key] = function (stepOptions) {
             steps.push(function (state, cb) {
-                var desc = getDesc(name)
-                  , step = require(file)
-                  , opts = stepOptions || {};
+                var desc     = getDesc(name)
+                  , step     = require(file)
+                  , opts     = stepOptions || {}
+                  , arity    = step.length
+                  , callback = function (err) {
+                        cb(err, state);
+                    };
 
                 print(desc);
-                step(state, opts, function (err) {
-                    cb(err, state);
-                });
+
+                switch (arity) {
+                    case 3:
+                        step(state, opts, callback);
+                        break;
+                    case 2:
+                        step(opts, callback);
+                        break;
+                    default:
+                        step(callback);
+                        break;
+                }
             });
 
             return module.exports;

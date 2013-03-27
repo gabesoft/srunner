@@ -1,7 +1,7 @@
 var fs   = require('fs')
   , path = require('path');
 
-module.exports = function (state, dir, cb) {
+module.exports = function (dir, cb) {
     dir = path.resolve(dir);
 
     fs.stat(dir, function (err, stat) {
