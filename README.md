@@ -70,8 +70,8 @@ runner.js
 
 # sub-scripts method signature
 
-the sub-scripts (steps) are expected to provide a single export method with
-the following signatures (any of these is allowed)
+The sub-scripts (steps) are expected to provide a single export method with
+the following signatures (any of these is allowed):
 
 ``` js
 module.exports = function (state, options, cb) {
