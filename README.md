@@ -77,10 +77,10 @@ the following signatures (any of these is allowed)
 module.exports = function (state, options, cb) {
 ```
 ``` js
- module.exports = function (options, cb) {
+module.exports = function (options, cb) {
 ```
 ``` js
- module.exports = function (cb) {
+module.exports = function (cb) {
 ```
 
 where
