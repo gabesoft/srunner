@@ -1,4 +1,4 @@
 module.exports = function (state, options, cb) {
-    console.log('Cleaning up...');
+    console.log('Setting up environment...');
     cb();
 };

@@ -42,15 +42,6 @@ module.exports = (state, options, cb) {
 };
 ```
 
-scripts/cleanup.js
-
-``` js
-module.exports = (state, options, cb) {
-    // TODO: perform cleanup
-    cb();
-};
-```
-
 Then write the main script
 
 runner.js
@@ -59,12 +50,11 @@ runner.js
     var srunner = require('srunner');
 
     srunner
-        .init({ dir: './scripts', onError: 'cleanup' })
+        .init({ dir: './scripts', onError: 'killServers' })
         .setupEnv()
         .startServers({ port: 9000 })
         .doSomething()
         .killServers()
-        .cleanup()
         .run();
 ```
 
@@ -99,8 +89,8 @@ var srunner = require('srunner');
 ## init(options)
 
 This method must be called first. It reads the scripts directory and creates methods on the runner
-based on the scripts found in the specified directory. The files should be named with underscores
-and corresponding methods will be camel cased (e.g. do_stuff.js -> doStuff())
+based on the scripts found in the specified directory. Each file should be named with underscores
+and its corresponding method will be camel cased (e.g. do_stuff.js -> doStuff()).
 
 ## run()
 

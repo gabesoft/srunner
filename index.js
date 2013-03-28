@@ -20,7 +20,7 @@ function getDesc (text) {
 
 function done (err) {
     if (err) {
-        console.log('Runner Failed'.red);
+        console.log('Runner Failed'.red, err);
     } else {
         console.log('Runner Done'.blue);
     }
@@ -38,11 +38,27 @@ function readFiles (dir) {
        .map(function(name) { return path.join(dir, name); });
 }
 
+function callStep (fn, state, options, cb) {
+    var arity = fn.length;
+
+    switch (arity) {
+        case 3:
+            fn(state, options, cb);
+            break;
+        case 2:
+            fn(options, cb);
+            break;
+        default:
+            fn(cb);
+            break;
+    }
+}
+
 module.exports.init = function (options) {
     options = options || {};
 
     var local = path.join(__dirname, 'scripts')
-      , dir   = options.dir || __dirname
+      , dir   = options.dir || options.scripts || options.scriptDir || __dirname
       , files = null
       , print = function (step) {
             if (!options.quiet) {
@@ -60,48 +76,37 @@ module.exports.init = function (options) {
 
         if (options.onError && key === options.onError) {
             errorHandler = function (err, cb) {
-                require(file)(state, { error: err }, cb);
+                var handler = require(file);
+                callStep(handler, state, { error: err }, cb);
             }
         }
 
         module.exports[key] = function (stepOptions) {
             steps.push(function (state, cb) {
-                var desc     = getDesc(name)
-                  , step     = require(file)
-                  , opts     = stepOptions || {}
-                  , arity    = step.length
-                  , callback = function (err) {
-                        cb(err, state);
-                    };
+                var desc = getDesc(name)
+                  , step = require(file)
+                  , opts = stepOptions || {};
 
                 print(desc);
-
-                switch (arity) {
-                    case 3:
-                        step(state, opts, callback);
-                        break;
-                    case 2:
-                        step(opts, callback);
-                        break;
-                    default:
-                        step(callback);
-                        break;
-                }
+                callStep(step, state, opts, function (err) {
+                    cb(err, state);
+                });
             });
 
             return module.exports;
         };
-
-        if (errorHandler) {
-            process.on('uncaughtException', function (err) {
-                errorHandler(err, function () {
-                    console.error(err.stack || err);
-                    process.exit(1);
-                });
-            });
-        }
-
     });
+
+    if (errorHandler) {
+        process.on('uncaughtException', function (err) {
+            errorHandler(err, function () {
+                console.error(err.stack || err);
+                process.exit(1);
+            });
+        });
+    } else if (options.onError) { 
+        console.log('No error handler found '.yellow + options.onError);
+    }
 
     return module.exports;
 };
