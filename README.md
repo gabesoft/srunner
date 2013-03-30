@@ -58,6 +58,8 @@ runner.js
         .run();
 ```
 
+For another example check out [gcpk](https://github.com/gabesoft/gcpk)
+
 # sub-scripts method signature
 
 The sub-scripts (steps) are expected to provide a single export method with
