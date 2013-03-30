@@ -3,7 +3,13 @@ var async        = require('async')
   , path         = require('path')
   , errorHandler = null
   , steps        = null
-  , state        = null;
+  , state        = null
+  , quiet        = false
+  , print        = function (step) {
+        if (!quiet) {
+            console.log(step.blue);
+        }
+    };
 
 require('colors');
 
@@ -22,7 +28,7 @@ function done (err) {
     if (err) {
         console.log('Runner Failed'.red, err);
     } else {
-        console.log('Runner Done'.blue);
+        print('Runner Done');
     }
 
     if (state.exitCode) {
@@ -56,15 +62,11 @@ function callStep (fn, state, options, cb) {
 
 module.exports.init = function (options) {
     options = options || {};
+    quiet   = options.quiet;
 
     var local = path.join(__dirname, 'scripts')
       , dir   = options.dir || options.scripts || options.scriptDir || __dirname
-      , files = null
-      , print = function (step) {
-            if (!options.quiet) {
-                console.log('Step: ' + step.blue);
-            }
-        };
+      , files = null;
 
     files = readFiles(local);
     files = files.concat(readFiles(dir));
@@ -111,23 +113,24 @@ module.exports.init = function (options) {
     return module.exports;
 };
 
-module.exports.run = function () {
-    var tasks = steps.slice(0);
+module.exports.run = function (cb) {
+    var tasks = steps.slice(0)
+      , cb    = cb || function (err) {
+            if (err && errorHandler) {
+                errorHandler(err, function () {
+                    done(err);
+                });
+            } else {
+                done(err);
+            }
+        };
 
     state = {};
 
     tasks.unshift(function (cb) {
-        console.log('Runner Started'.blue);
+        print('Runner Started');
         cb(null, state);
     });
 
-    async.waterfall(tasks, function (err) {
-        if (err && errorHandler) {
-            errorHandler(err, function () {
-                done(err);
-            });
-        } else {
-            done(err);
-        }
-    });
+    async.waterfall(tasks, cb);
 };

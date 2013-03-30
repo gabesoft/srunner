@@ -92,10 +92,11 @@ This method must be called first. It reads the scripts directory and creates met
 based on the scripts found in the specified directory. Each file should be named with underscores
 and its corresponding method will be camel cased (e.g. do_stuff.js -> doStuff()).
 
-## run()
+## run(cb)
 
 Will run the script. All methods will be run async and in the order called. On error (either
-unhandled or not) the specified error handler will be called, if any.
+unhandled or not) the specified error handler will be called, if any. This function can be passed 
+a callback for further processing.
 
 ```
 $ npm install srunner
