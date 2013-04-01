@@ -77,7 +77,7 @@ module.exports = function (cb)
 ```
 
 where
-- state:    Is an object that is local to the main script runner and it's passed to every step
+- state:    Is an object that is local to the runner object and it's passed to every step
 - options:  Is used to pass any parameter from the main script (see the startServers method above)
 - cb:       Is a callback method that must be called (potentially with an error). If called with an
             error all the steps following this one will be skipped and an error handler will be
