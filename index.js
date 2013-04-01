@@ -1,47 +1,24 @@
 var async        = require('async')
   , fs           = require('fs')
-  , path         = require('path')
-  , errorHandler = null
-  , steps        = null
-  , state        = null
-  , quiet        = false
-  , print        = function (step) {
-        if (!quiet) {
-            console.log(step.blue);
-        }
-    };
+  , path         = require('path');
 
 require('colors');
-
-function getKey (text) {
-    text = text.replace(/\.[a-z]+$/, '');
-    return text.replace(/_(.)/g, function (x, chr) { return chr.toUpperCase(); });
-} 
-
-function getDesc (text) {
-    text = text.replace(/\.[a-z]+$/, '');
-    text = text.replace(/_(.)/g, function (x, chr) { return ' ' + chr.toUpperCase(); });
-    return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-function done (err) {
-    if (err) {
-        console.log('Runner Failed'.red, err);
-    } else {
-        print('Runner Done');
-    }
-
-    if (state.exitCode) {
-        process.exit(state.exitCode);
-    } else {
-        process.exit(err ? 1 : 0);
-    }
-}
 
 function readFiles (dir) {
     return fs
        .readdirSync(dir)
        .map(function(name) { return path.join(dir, name); });
+}
+
+function getKey (text) {
+    text = text.replace(/\.[a-z]+$/, '');
+    return text.replace(/_(.)/g, function (x, chr) { return chr.toUpperCase(); });
+}
+
+function getDesc (text) {
+    text = text.replace(/\.[a-z]+$/, '');
+    text = text.replace(/_(.)/g, function (x, chr) { return ' ' + chr.toUpperCase(); });
+    return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 function callStep (fn, state, options, cb) {
@@ -60,77 +37,106 @@ function callStep (fn, state, options, cb) {
     }
 }
 
-module.exports.init = function (options) {
-    options = options || {};
-    quiet   = options.quiet;
+function Runner () {
+    if (!(this instanceof Runner)) { return new Runner(); }
 
-    var local = path.join(__dirname, 'scripts')
+    this._errorHandler = null;
+    this._steps        = null;
+    this._state        = null;
+    this._quiet        = false;
+}
+
+Runner.prototype.init = function(options) {
+    options    = options || {};
+
+    var self  = this
+      , local = path.join(__dirname, 'scripts')
       , dir   = options.dir || options.scripts || options.scriptDir || __dirname
-      , files = null;
+      , files = readFiles(local).concat(readFiles(dir));
 
-    files = readFiles(local);
-    files = files.concat(readFiles(dir));
-    steps = [];
+    self._quiet = options.quiet;
+    self._steps = [];
 
     files.forEach(function (file) {
         var name = path.basename(file)
           , key  = getKey(name);
 
         if (options.onError && key === options.onError) {
-            errorHandler = function (err, cb) {
+            self._errorHandler = function (err, cb) {
                 var handler = require(file);
-                callStep(handler, state, { error: err }, cb);
+                callStep(handler, self._state, { error: err }, cb);
             }
         }
 
-        module.exports[key] = function (stepOptions) {
-            steps.push(function (state, cb) {
+        self[key] = function (stepOptions) {
+            self._steps.push(function (state, cb) {
                 var desc = getDesc(name)
                   , step = require(file)
                   , opts = stepOptions || {};
 
-                print(desc);
+                self._print(desc);
                 callStep(step, state, opts, function (err) {
                     cb(err, state);
                 });
             });
 
-            return module.exports;
+            return self;
         };
     });
 
-    if (errorHandler) {
+    if (self._errorHandler) {
         process.on('uncaughtException', function (err) {
-            errorHandler(err, function () {
+            self._errorHandler(err, function () {
                 console.error(err.stack || err);
                 process.exit(1);
             });
         });
-    } else if (options.onError) { 
+    } else if (options.onError) {
         console.log('No error handler found '.yellow + options.onError);
     }
 
-    return module.exports;
+    return self;
 };
 
-module.exports.run = function (cb) {
-    var tasks = steps.slice(0)
+Runner.prototype.run = function(cb) {
+    var self  = this
+      , tasks = self._steps.slice(0)
       , cb    = cb || function (err) {
-            if (err && errorHandler) {
-                errorHandler(err, function () {
-                    done(err);
-                });
+            if (err && self._errorHandler) {
+                self._errorHandler(err, function () { self._printStatusAndExit(err); });
             } else {
-                done(err);
+                self._printStatusAndExit(err);
             }
         };
 
-    state = {};
+    self._state = {};
 
     tasks.unshift(function (cb) {
-        print('Runner Started');
-        cb(null, state);
+        self._print('Runner Started');
+        cb(null, self._state);
     });
 
     async.waterfall(tasks, cb);
 };
+
+Runner.prototype._print = function(step) {
+    if (!this._quiet) {
+        console.log(step.blue);
+    }
+};
+
+Runner.prototype._printStatusAndExit = function(err) {
+    if (err) {
+        console.log('Runner Failed'.red, err);
+    } else if (!this._quiet) {
+        this._print('Runner Done');
+    }
+
+    if (this._state.exitCode) {
+        process.exit(this._state.exitCode);
+    } else {
+        process.exit(err ? 1 : 0);
+    }
+};
+
+module.exports.Runner = Runner;

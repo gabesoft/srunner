@@ -1,6 +1,7 @@
-var srunner = require('../index');
+var Runner = require('../index').Runner
+  , runner = new Runner();
 
-srunner
+runner
    .init({ dir: __dirname, onError: 'killServers' })
    .setupEnv()
    .startServers({ port1: 8000, port2: 8001 })

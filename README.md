@@ -47,9 +47,10 @@ Then write the main script
 runner.js
 
 ``` js
-    var srunner = require('srunner');
+    var Runner = require('srunner').Runner
+      , runner = new Runner();
 
-    srunner
+    runner
         .init({ dir: './scripts', onError: 'killServers' })
         .setupEnv()
         .startServers({ port: 9000 })
@@ -85,7 +86,8 @@ where
 # methods
 
 ``` js
-var srunner = require('srunner');
+var Runner = require('srunner').Runner
+  , runner = new Runner();
 ```
 
 ## init(options)
