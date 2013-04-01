@@ -67,13 +67,13 @@ The sub-scripts (steps) are expected to provide a single export method with
 the following signatures (any of these is allowed):
 
 ``` js
-module.exports = function (state, options, cb) {
+module.exports = function (state, options, cb)
 ```
 ``` js
-module.exports = function (options, cb) {
+module.exports = function (options, cb)
 ```
 ``` js
-module.exports = function (cb) {
+module.exports = function (cb)
 ```
 
 where
