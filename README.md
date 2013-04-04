@@ -96,6 +96,11 @@ This method must be called first. It reads the scripts directory and creates met
 based on the scripts found in the specified directory. Each file should be named with underscores
 and its corresponding method will be camel cased (e.g. do_stuff.js -> doStuff()).
 
+where options is an object that can contain the following
+- dir:      the scripts directory (this can be an array of multiple directories)
+- onError:  the handler that will be called in case of error 
+- quiet:    set to true don't print the step names
+
 ## run(cb)
 
 Will run the script. All methods will be run async and in the order called. On error (either

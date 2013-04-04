@@ -1,6 +1,7 @@
-var async        = require('async')
-  , fs           = require('fs')
-  , path         = require('path');
+var async = require('async')
+  , fs    = require('fs')
+  , util  = require('util')
+  , path  = require('path');
 
 require('colors');
 
@@ -50,9 +51,15 @@ Runner.prototype.init = function(options) {
     options    = options || {};
 
     var self  = this
-      , local = path.join(__dirname, 'scripts')
+      , dirs  = []
       , dir   = options.dir || options.scripts || options.scriptDir || __dirname
-      , files = readFiles(local).concat(readFiles(dir));
+      , files = null;
+
+    dirs.push(path.join(__dirname, 'scripts'));
+
+    dir   = util.isArray(dir) ? dir : [ dir ]
+    dirs  = dirs.concat(dir);
+    files = dirs.reduce(function (acc, d) { return acc.concat(readFiles(d)); }, []);
 
     self._quiet = options.quiet;
     self._steps = [];
