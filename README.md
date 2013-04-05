@@ -99,7 +99,7 @@ and its corresponding method will be camel cased (e.g. do_stuff.js -> doStuff())
 where options is an object that can contain the following
 - `dir`:      the scripts directory (this can be an array of multiple directories)
 - `onError`:  the handler that will be called in case of error
-- `quiet`:    set to true to avoid printing the step names before each step executes
+- `quiet`:    set to true to avoid printing the step name before each step executes
 
 ## run(cb)
 
