@@ -77,11 +77,11 @@ module.exports = function (cb)
 ```
 
 where
-- state:    Is an object that is local to the runner object and it's passed to every step
-- options:  Is used to pass any parameter from the main script (see the startServers method above)
-- cb:       Is a callback method that must be called (potentially with an error). If called with an
-            error all the steps following this one will be skipped and an error handler will be
-            invoked if specified.
+- `state`:    Is an object that is local to the runner object and it's passed to every step
+- `options`:  Is used to pass any parameter from the main script (see the startServers method above)
+- `cb`:       Is a callback method that must be called (potentially with an error). If called with an
+              error all the steps following this one will be skipped and an error handler will be
+              invoked if specified.
 
 # methods
 
@@ -97,14 +97,14 @@ based on the scripts found in the specified directory. Each file should be named
 and its corresponding method will be camel cased (e.g. do_stuff.js -> doStuff()).
 
 where options is an object that can contain the following
-- dir:      the scripts directory (this can be an array of multiple directories)
-- onError:  the handler that will be called in case of error 
-- quiet:    set to true don't print the step names
+- `dir`:      the scripts directory (this can be an array of multiple directories)
+- `onError`:  the handler that will be called in case of error
+- `quiet`:    set to true to avoid printing the step names before each step executes
 
 ## run(cb)
 
 Will run the script. All methods will be run async and in the order called. On error (either
-unhandled or not) the specified error handler will be called, if any. This function can be passed 
+unhandled or not) the specified error handler will be called, if any. This function can be passed
 a callback for further processing.
 
 ```
