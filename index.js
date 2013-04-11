@@ -147,3 +147,4 @@ Runner.prototype._printStatusAndExit = function(err) {
 };
 
 module.exports.Runner = Runner;
+module.exports.create = function() { return new Runner(); };
