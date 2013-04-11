@@ -1,3 +1,10 @@
+```
+ ____  ___,   __   _, ____,   ____,   ____, ___,
+(-(__`(-|_)  (-|  |  (-|  |  (-|  |  (-|_, (-|_)
+ ____) _| \_,  |__|_, _|  |_, _|  |_, _|__, _| \_,
+(     (              (       (       (     (
+
+```
 # Script Runner (srunner)
 
 *Break down large scripts into manageable steps*
@@ -59,7 +66,7 @@ runner.js
         .run();
 ```
 
-For another example check out [gcpk](https://github.com/gabesoft/gcpk)
+For more examples check out [gcpk](https://github.com/gabesoft/gcpk) or [scripts](https://github.com/gabesoft/scripts)
 
 # sub-scripts method signature
 
