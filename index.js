@@ -81,7 +81,7 @@ Runner.prototype.init = function(options) {
                   , step = require(file)
                   , opts = stepOptions || {};
 
-                self._print(desc);
+                self._printStepName(desc);
                 callStep(step, state, opts, function (err) {
                     cb(err, state);
                 });
@@ -102,6 +102,8 @@ Runner.prototype.init = function(options) {
         console.log('No error handler found '.yellow + options.onError);
     }
 
+    self._state     = options.state || {};
+    self._state.log = require('./logger');
     return self;
 };
 
@@ -116,17 +118,15 @@ Runner.prototype.run = function(cb) {
             }
         };
 
-    self._state = {};
-
     tasks.unshift(function (cb) {
-        self._print('Runner Started');
+        self._printStepName('Runner Started');
         cb(null, self._state);
     });
 
     async.waterfall(tasks, cb);
 };
 
-Runner.prototype._print = function(step) {
+Runner.prototype._printStepName = function(step) {
     if (!this._quiet) {
         console.log(step.blue);
     }
@@ -134,9 +134,13 @@ Runner.prototype._print = function(step) {
 
 Runner.prototype._printStatusAndExit = function(err) {
     if (err) {
-        console.log('Runner Failed'.red, err);
+        if (this._state.log) {
+            this._state.log.error(err);
+        } else {
+            console.log('Runner Failed'.red, err);
+        }
     } else if (!this._quiet) {
-        this._print('Runner Done');
+        this._printStepName('Runner Done');
     }
 
     if (this._state.exitCode) {
