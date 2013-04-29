@@ -4,7 +4,7 @@ var fs     = require('fs')
   , path   = require('path');
 
 module.exports = function (state, dir, cb) {
-    level = core.isString(dir) ? 'debug' : (dir.quiet === false ? 'info' : debug);
+    level = core.isString(dir) ? 'info' : (dir.quiet ? 'debug' : 'info');
     dir   = core.isString(dir) ? dir : (dir.dir || dir.path);
     dir   = path.resolve(dir);
     log   = state.log;
