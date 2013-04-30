@@ -1,5 +1,5 @@
-module.exports = function (options, cb) {
-    console.log('Doing something...', options);
+module.exports = function (state, options, cb) {
+    state.log.info('doing something...' + JSON.stringify(options));
     cb();
 };
 

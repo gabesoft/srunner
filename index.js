@@ -19,7 +19,7 @@ function getKey (text) {
 function getDesc (text) {
     text = text.replace(/\.[a-z]+$/, '');
     text = text.replace(/_(.)/g, function (x, chr) { return ' ' + chr.toUpperCase(); });
-    return text.charAt(0).toUpperCase() + text.slice(1);
+    return text.toLowerCase();
 }
 
 function callStep (fn, state, options, cb) {
@@ -119,7 +119,7 @@ Runner.prototype.run = function(cb) {
         };
 
     tasks.unshift(function (cb) {
-        self._printStepName('Runner Started');
+        self._printStepName('runner started');
         cb(null, self._state);
     });
 
@@ -128,7 +128,11 @@ Runner.prototype.run = function(cb) {
 
 Runner.prototype._printStepName = function(step) {
     if (!this._quiet) {
-        console.log(step.blue);
+        if (this._state.log && this._state.log.step) {
+            this._state.log.step(step.blue);
+        } else { 
+            console.log(step.blue);
+        }
     }
 };
 
@@ -137,10 +141,10 @@ Runner.prototype._printStatusAndExit = function(err) {
         if (this._state.log) {
             this._state.log.error(err);
         } else {
-            console.log('Runner Failed'.red, err);
+            console.log('runner failed'.red, err);
         }
     } else if (!this._quiet) {
-        this._printStepName('Runner Done');
+        this._printStepName('runner done');
     }
 
     if (this._state.exitCode) {

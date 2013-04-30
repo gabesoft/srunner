@@ -1,4 +1,4 @@
 module.exports = function (state, options, cb) {
-    console.log('Setting up environment...');
+    state.log.info('setting up environment...');
     cb();
 };

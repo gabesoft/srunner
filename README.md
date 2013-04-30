@@ -66,7 +66,7 @@ runner.js
         .run();
 ```
 
-For more examples check out [gcpk](https://github.com/gabesoft/gcpk) or [scripts](https://github.com/gabesoft/scripts)
+For more examples check out [gcpk](https://github.com/gabesoft/gcpk) or [scripts](https://github.com/gabesoft/scripts) or [mogen](https://github.com/gabesoft/mogen)
 
 # sub-scripts method signature
 
@@ -107,6 +107,7 @@ where options is an object that can contain the following
 - `dir`:      the scripts directory (this can be a string or an array)
 - `onError`:  the name of the error handler that will be called in case of error
 - `quiet`:    set to true to avoid printing the step name before each step executes
+- `state`:    an object to set as the initial state
 
 ## run(cb)
 

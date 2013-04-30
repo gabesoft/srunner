@@ -7,6 +7,7 @@ var util   = require('util')
       , info  : { text: 'info'.blue,          pad: '   ' }
       , warn  : { text: 'warn'.yellow,        pad: '   ' }
       , help  : { text: 'help'.cyan,          pad: '   ' }
+      , step  : { text: 'step'.magenta,       pad: '   ' }
       , data  : { text: 'data'.grey,          pad: '   ' }
     };
 
