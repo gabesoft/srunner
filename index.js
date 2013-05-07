@@ -1,7 +1,8 @@
-var async = require('async')
-  , fs    = require('fs')
-  , util  = require('util')
-  , path  = require('path');
+var async  = require('async')
+  , fs     = require('fs')
+  , util   = require('util')
+  , path   = require('path')
+  , Logger = require('./logger').Logger;
 
 require('colors');
 
@@ -38,9 +39,10 @@ function callStep (fn, state, options, cb) {
     }
 }
 
-function Runner () {
-    if (!(this instanceof Runner)) { return new Runner(); }
+function Runner (options) {
+    if (!(this instanceof Runner)) { return new Runner(options); }
 
+    this.log           = new Logger(options);
     this._errorHandler = null;
     this._steps        = null;
     this._state        = null;
@@ -103,7 +105,7 @@ Runner.prototype.init = function(options) {
     }
 
     self._state     = options.state || {};
-    self._state.log = require('./logger');
+    self._state.log = self.log;
     return self;
 };
 
@@ -155,4 +157,4 @@ Runner.prototype._printStatusAndExit = function(err) {
 };
 
 module.exports.Runner = Runner;
-module.exports.create = function() { return new Runner(); };
+module.exports.create = function(options) { return new Runner(options); };

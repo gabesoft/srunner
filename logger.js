@@ -11,35 +11,53 @@ var util   = require('util')
       , data  : { text: 'data'.grey,          pad: '   ' }
     };
 
-function writeln(level, obj) {
-    obj = obj || '';
-    console.log(level.text + ':' + level.pad, obj);
-}
-
-function write (level, obj) {
-    obj = obj || '';
-    if (core.isString(obj)) {
-        obj.split('\n').filter(Boolean).forEach(function (line) {
-            writeln(level, line);
-        });
-    } else if (Buffer.isBuffer(obj)) {
-        write(level, obj.toString('utf8').trim());
-    } else if (util.isError(obj) && obj.stack) {
-        write(level, obj.stack);
-    } else {
-        writeln(level, obj);
-    }
-}
-
 function enabled (name) {
     var env = process.env.NODE_ENV;
     return name !== 'debug' || (env === 'debug' || env === 'development');
 }
 
-Object.keys(levels).forEach(function(name) {
-    module.exports[name] = function(obj) {
-        if (enabled(name)) {
-            write(levels[name], obj);
+function Logger (options) {
+    var self = this;
+
+    self.options = options || {};
+
+    Object.keys(levels).forEach(function(name) {
+        self[name] = function(obj) {
+            if (enabled(name)) {
+                self.write(levels[name], obj);
+            }
+        };
+    });
+}
+
+Logger.prototype.writeln = function(level, obj) {
+    obj = obj || '';
+    console.log(level.text + ':' + level.pad, obj);
+};
+
+
+Logger.prototype.write = function(level, obj) {
+    obj = obj || '';
+
+    var self  = this
+      , opts  = this.options
+      , lines = null;
+
+    if (core.isString(obj)) {
+        lines = obj.split('\n');
+        if (!opts.keepBlankLines) {
+            lines = lines.filter(Boolean);
         }
-    };
-});
+        lines.forEach(function (line) {
+            self.writeln(level, line);
+        });
+    } else if (Buffer.isBuffer(obj)) {
+        self.write(level, obj.toString('utf8').trim());
+    } else if (util.isError(obj) && obj.stack) {
+        self.write(level, obj.stack);
+    } else {
+        self.writeln(level, obj);
+    }
+}
+
+module.exports.Logger = Logger;
