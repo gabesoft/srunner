@@ -1,3 +1,7 @@
+0.1.4
+-----
+Logging enhancements
+
 0.1.3
 -----
 Added logger and initial state option

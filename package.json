@@ -1,6 +1,6 @@
 {
   "name": "srunner",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A node script runner to allow easy management of large scripts",
   "main": "index.js",
   "dependencies": {
