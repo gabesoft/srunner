@@ -1,3 +1,7 @@
+0.1.5
+-----
+Exposed logger
+
 0.1.4
 -----
 Logging enhancements
