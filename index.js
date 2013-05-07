@@ -42,7 +42,8 @@ function callStep (fn, state, options, cb) {
 function Runner (options) {
     if (!(this instanceof Runner)) { return new Runner(options); }
 
-    this.log           = new Logger(options);
+    this.options       = options || {};
+    this.log           = this.options.log || new Logger(options);
     this._errorHandler = null;
     this._steps        = null;
     this._state        = null;
@@ -157,4 +158,5 @@ Runner.prototype._printStatusAndExit = function(err) {
 };
 
 module.exports.Runner = Runner;
+module.exports.Logger = Logger;
 module.exports.create = function(options) { return new Runner(options); };
