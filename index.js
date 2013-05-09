@@ -132,7 +132,7 @@ Runner.prototype.run = function(cb) {
 Runner.prototype._printStepName = function(step) {
     if (!this._quiet) {
         if (this._state.log && this._state.log.step) {
-            this._state.log.step(step.blue);
+            this._state.log.step(step);
         } else { 
             console.log(step.blue);
         }
