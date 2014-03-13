@@ -1,3 +1,7 @@
+0.1.8
+-----
+Allow setting options on creation or init
+
 0.1.7
 -----
 Added option to ignore task results when calling the run callback
