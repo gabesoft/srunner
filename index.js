@@ -42,12 +42,15 @@ function callStep (fn, state, options, cb) {
 function Runner (options) {
     if (!(this instanceof Runner)) { return new Runner(options); }
 
-    this.options       = options || {};
-    this.log           = this.options.log || new Logger(options);
+    options = options || {};
+
+    this.log           = options.log || new Logger(options);
+    this._ignoreResults = Boolean(options.ignoreResults);
+    this._quiet        = Boolean(options.quiet);
     this._errorHandler = null;
     this._steps        = null;
     this._state        = null;
-    this._quiet        = false;
+    this._dir          = options.dir || options.scripts || options.scriptDir || __dirname;
 }
 
 Runner.prototype.init = function(options) {
@@ -55,17 +58,18 @@ Runner.prototype.init = function(options) {
 
     var self  = this
       , dirs  = []
-      , dir   = options.dir || options.scripts || options.scriptDir || __dirname
+      , dir   = options.dir || options.scripts || options.scriptDir || self._dir
       , files = null;
 
     dirs.push(path.join(__dirname, 'scripts'));
 
-    dir   = util.isArray(dir) ? dir : [ dir ]
+    dir   = util.isArray(dir) ? dir : [ dir ];
     dirs  = dirs.concat(dir);
     files = dirs.reduce(function (acc, d) { return acc.concat(readFiles(d)); }, []);
 
-    self._quiet = options.quiet;
-    self._steps = [];
+    self._quiet         = options.quiet || self._quiet;
+    self._ignoreResults = options.ignoreResults || self._ignoreResults;
+    self._steps         = [];
 
     files.forEach(function (file) {
         var name = path.basename(file)
@@ -75,7 +79,7 @@ Runner.prototype.init = function(options) {
             self._errorHandler = function (err, cb) {
                 var handler = require(file);
                 callStep(handler, self._state, { error: err }, cb);
-            }
+            };
         }
 
         self[key] = function (stepOptions) {
@@ -110,10 +114,10 @@ Runner.prototype.init = function(options) {
     return self;
 };
 
-Runner.prototype.run = function(cb) {
+Runner.prototype.run = function(callback) {
     var self  = this
       , tasks = self._steps.slice(0)
-      , cb    = cb || function (err) {
+      , cb    = callback || function (err) {
             if (err && self._errorHandler) {
                 self._errorHandler(err, function () { self._printStatusAndExit(err); });
             } else {
@@ -127,7 +131,7 @@ Runner.prototype.run = function(cb) {
     });
 
     async.waterfall(tasks, function (err, results) {
-      if (self.options.ignoreResults) {
+      if (self._ignoreResults) {
           cb(err);
       } else {
           cb(err, results);
