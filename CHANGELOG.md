@@ -1,3 +1,7 @@
+0.1.7
+-----
+Added option to ignore task results when calling the run callback
+
 0.1.6
 -----
 Logging updates
