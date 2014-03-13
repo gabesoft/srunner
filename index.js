@@ -126,14 +126,20 @@ Runner.prototype.run = function(cb) {
         cb(null, self._state);
     });
 
-    async.waterfall(tasks, cb);
+    async.waterfall(tasks, function (err, results) {
+      if (self.options.ignoreResults) {
+          cb(err);
+      } else {
+          cb(err, results);
+      }
+    });
 };
 
 Runner.prototype._printStepName = function(step) {
     if (!this._quiet) {
         if (this._state.log && this._state.log.step) {
             this._state.log.step(step);
-        } else { 
+        } else {
             console.log(step.blue);
         }
     }
