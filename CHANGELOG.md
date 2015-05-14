@@ -1,3 +1,7 @@
+0.1.9
+-----
+Allow for repeating tasks
+
 0.1.8
 -----
 Allow setting options on creation or init
