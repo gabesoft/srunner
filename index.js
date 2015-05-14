@@ -127,6 +127,7 @@ Runner.prototype.run = function(callback) {
 
     tasks.unshift(function (cb) {
         self._printStepName('runner started');
+        self._state.runner = self;
         cb(null, self._state);
     });
 
