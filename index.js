@@ -2,6 +2,7 @@ var async  = require('async')
   , fs     = require('fs')
   , util   = require('util')
   , path   = require('path')
+  , id     = 1
   , Logger = require('./logger').Logger;
 
 require('colors');
@@ -44,13 +45,15 @@ function Runner (options) {
 
     options = options || {};
 
-    this.log           = options.log || new Logger(options);
+    this.log            = options.log || new Logger(options);
     this._ignoreResults = Boolean(options.ignoreResults);
-    this._quiet        = Boolean(options.quiet);
-    this._errorHandler = null;
-    this._steps        = null;
-    this._state        = null;
-    this._dir          = options.dir || options.scripts || options.scriptDir || __dirname;
+    this._quiet         = Boolean(options.quiet);
+    this._logRunnerId   = Boolean(options.logRunnerId);
+    this._errorHandler  = null;
+    this._steps         = null;
+    this._state         = null;
+    this._dir           = options.dir || options.scripts || options.scriptDir || __dirname;
+    this._id            = id++;
 }
 
 Runner.prototype.init = function(options) {
@@ -67,8 +70,9 @@ Runner.prototype.init = function(options) {
     dirs  = dirs.concat(dir);
     files = dirs.reduce(function (acc, d) { return acc.concat(readFiles(d)); }, []);
 
-    self._quiet         = options.quiet || self._quiet;
-    self._ignoreResults = options.ignoreResults || self._ignoreResults;
+    self._quiet         = Boolean(options.quiet) || self._quiet;
+    self._ignoreResults = Boolean(options.ignoreResults) || self._ignoreResults;
+    self._logRunnerId   = Boolean(options.logRunnerId) || self._logRunnerId;
     self._steps         = [];
 
     files.forEach(function (file) {
@@ -132,18 +136,21 @@ Runner.prototype.run = function(callback) {
     });
 
     async.waterfall(tasks, function (err, results) {
-      if (self._ignoreResults) {
-          cb(err);
-      } else {
-          cb(err, results);
-      }
+        if (self._ignoreResults) {
+            cb(err);
+        } else {
+            cb(err, results);
+        }
     });
 };
 
 Runner.prototype._printStepName = function(step) {
+    var runnerString = this._logRunnerId
+            ? ('runner ' + this._id).magenta + ' '
+            : '';
     if (!this._quiet) {
         if (this._state.log && this._state.log.step) {
-            this._state.log.step(step);
+            this._state.log.step(runnerString + step);
         } else {
             console.log(step.blue);
         }

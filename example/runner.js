@@ -2,7 +2,7 @@ var Runner = require('../index').Runner
   , runner = new Runner();
 
 runner
-   .init({ dir: __dirname, onError: 'killServers' })
+   .init({ dir: __dirname, onError: 'killServers', logRunnerId: true })
    .setupEnv()
    .startServers({ port1: 8000, port2: 8001 })
    .doSomething({ change: 'world' })
