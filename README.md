@@ -5,6 +5,10 @@
 (     (              (       (       (     (
 
 ```
+
+[![Latest Stable Version](https://img.shields.io/npm/v/srunner.svg?style=flat-square)](https://www.npmjs.com/package/srunner)
+[![NPM Downloads](https://img.shields.io/npm/dm/srunner.svg?style=flat-square)](https://www.npmjs.com/package/srunner)
+
 # Script Runner (srunner)
 
 *Break down large scripts into manageable steps*
