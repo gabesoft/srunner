@@ -1,3 +1,7 @@
+0.1.11
+-----
+Log the runner name if specified
+
 0.1.10
 -----
 Print the runner id when loggin a step
