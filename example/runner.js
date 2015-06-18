@@ -1,5 +1,5 @@
 var Runner = require('../index').Runner
-  , runner = new Runner();
+  , runner = new Runner({ name : 'sample runner' });
 
 runner
    .init({ dir: __dirname, onError: 'killServers', logRunnerId: true })

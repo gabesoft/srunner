@@ -46,6 +46,7 @@ function Runner (options) {
     options = options || {};
 
     this.log            = options.log || new Logger(options);
+    this._runnerName    = options.name || '';
     this._ignoreResults = Boolean(options.ignoreResults);
     this._quiet         = Boolean(options.quiet);
     this._logRunnerId   = Boolean(options.logRunnerId);
@@ -130,7 +131,10 @@ Runner.prototype.run = function(callback) {
         };
 
     tasks.unshift(function (cb) {
-        self._printStepName('runner started');
+        var name = self._runnerName.green
+          , step = self._runnerName ? 'runner ' + name + ' started' : 'runner started';
+
+        self._printStepName(step);
         self._state.runner = self;
         cb(null, self._state);
     });
