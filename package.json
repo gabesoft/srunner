@@ -16,5 +16,8 @@
     "name": "Gabriel Adomnicai",
     "email": "gabesoft@gmail.com"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^2.3.3"
+  }
 }

@@ -15,12 +15,12 @@ function readFiles (dir) {
 
 function getKey (text) {
     text = text.replace(/\.[a-z]+$/, '');
-    return text.replace(/_(.)/g, function (x, chr) { return chr.toUpperCase(); });
+    return text.replace(/[_-](.)/g, function (x, chr) { return chr.toUpperCase(); });
 }
 
 function getDesc (text) {
     text = text.replace(/\.[a-z]+$/, '');
-    text = text.replace(/_(.)/g, function (x, chr) { return ' ' + chr.toUpperCase(); });
+    text = text.replace(/[_-](.)/g, function (x, chr) { return ' ' + chr.toUpperCase(); });
     return text.toLowerCase();
 }
 

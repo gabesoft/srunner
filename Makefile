@@ -1,11 +1,13 @@
 default: test
 
-MOCHA   = node_modules/.bin/mocha -u tdd --check-leaks
+NODE = node
+BIN = $(CURDIR)/node_modules/.bin
+MOCHA   = $(BIN)/mocha -u tdd --check-leaks
 VERSION = $(shell node -pe 'require("./package.json").version')
 
 all: test
 
-.PHONY: release test loc clean no_targets__ help
+.PHONY: release test example loc clean no_targets__ help
 
 no_targets__:
 help:
@@ -35,6 +37,9 @@ loc:
 
 setup:
 	@npm install . -d
+
+example:
+	@$(NODE) example/runner.js
 
 clean-dep:
 	@rm -rf node_modules
