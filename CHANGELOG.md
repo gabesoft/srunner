@@ -1,3 +1,7 @@
+0.1.12
+-----
+Allow step names to contain dashes
+
 0.1.11
 -----
 Log the runner name if specified
