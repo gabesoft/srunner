@@ -1,3 +1,7 @@
+0.1.14
+-----
+Always enable chalk
+
 0.1.13
 -----
 Replaced colors with chalk
