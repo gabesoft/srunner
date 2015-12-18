@@ -2,10 +2,9 @@ var async  = require('async')
   , fs     = require('fs')
   , util   = require('util')
   , path   = require('path')
+  , chalk  = require('chalk')
   , id     = 1
   , Logger = require('./logger').Logger;
-
-require('colors');
 
 function readFiles (dir) {
     return fs
@@ -111,7 +110,7 @@ Runner.prototype.init = function(options) {
             });
         });
     } else if (options.onError) {
-        console.log('No error handler found '.yellow + options.onError);
+        console.log(chalk.yellow('No error handler found ') + options.onError);
     }
 
     self._state     = options.state || {};
@@ -131,7 +130,7 @@ Runner.prototype.run = function(callback) {
         };
 
     tasks.unshift(function (cb) {
-        var name = self._runnerName.green
+        var name = chalk.green(self._runnerName)
           , step = self._runnerName ? 'runner ' + name + ' started' : 'runner started';
 
         self._printStepName(step);
@@ -150,13 +149,13 @@ Runner.prototype.run = function(callback) {
 
 Runner.prototype._printStepName = function(step) {
     var runnerString = this._logRunnerId
-            ? ('runner ' + this._id).magenta + ' '
+            ? chalk.magenta('runner ' + this._id) + ' '
             : '';
     if (!this._quiet) {
         if (this._state.log && this._state.log.step) {
             this._state.log.step(runnerString + step);
         } else {
-            console.log(step.blue);
+            console.log(chalk.blue(step));
         }
     }
 };
@@ -166,7 +165,7 @@ Runner.prototype._printStatusAndExit = function(err) {
         if (this._state.log) {
             this._state.log.error(err);
         } else {
-            console.log('runner failed'.red, err);
+            console.log(chalk.red('runner failed'), err);
         }
     } else if (!this._quiet) {
         this._printStepName('runner done');

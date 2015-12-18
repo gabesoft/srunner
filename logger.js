@@ -1,14 +1,14 @@
 var util   = require('util')
   , core   = require('./core')
-  , colors = require('colors')
+  , chalk = require('chalk')
   , levels = {
-        error : { text: 'error'.red,          pad: '  ' }
-      , debug : { text: 'debug'.grey.inverse, pad: '  ' }
-      , info  : { text: 'info'.blue,          pad: '   ' }
-      , warn  : { text: 'warn'.yellow,        pad: '   ' }
-      , help  : { text: 'help'.cyan,          pad: '   ' }
-      , step  : { text: 'step'.magenta,       pad: '   ' }
-      , data  : { text: 'data'.grey,          pad: '   ' }
+        error : { text: chalk.red('error'),          pad: '  ' }
+      , debug : { text: chalk.gray.inverse('debug'), pad: '  ' }
+      , info  : { text: chalk.blue('info'),          pad: '   ' }
+      , warn  : { text: chalk.yellow('warn'),        pad: '   ' }
+      , help  : { text: chalk.cyan('help'),          pad: '   ' }
+      , step  : { text: chalk.magenta('step'),       pad: '   ' }
+      , data  : { text: chalk.gray('data'),          pad: '   ' }
     };
 
 function enabled (name) {

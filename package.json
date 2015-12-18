@@ -4,8 +4,8 @@
   "description": "A node script runner to allow easy management of large scripts",
   "main": "index.js",
   "dependencies": {
-    "colors": "~0.6.0",
     "async": "~0.2.6",
+    "chalk": "^1.1.1",
     "mkdirp": "~0.3.5"
   },
   "repository": {
