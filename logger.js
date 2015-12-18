@@ -1,6 +1,7 @@
 var util   = require('util')
   , core   = require('./core')
-  , chalk = require('chalk')
+  , Chalk  = require('chalk').constructor
+  , chalk  = new Chalk({ enabled :  true })
   , levels = {
         error : { text: chalk.red('error'),          pad: '  ' }
       , debug : { text: chalk.gray.inverse('debug'), pad: '  ' }
