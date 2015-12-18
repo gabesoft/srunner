@@ -1,3 +1,7 @@
+0.1.13
+-----
+Replaced colors with chalk
+
 0.1.12
 -----
 Allow step names to contain dashes
